@@ -1,0 +1,1 @@
+# Kubernetes worker Snap package

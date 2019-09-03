@@ -1,0 +1,135 @@
+name: kubernetes-worker
+base: core18
+version: '0.0.1'
+summary: A complete Kubernetes worker
+description: |
+  A fully functional Kubernetes worker in a snap.  This includes kubelet,
+  kube-proxy, kubectl, flanneld, containerd.
+
+grade: devel
+confinement: devmode
+
+apps:
+  containerd:
+    command: containerd.wrapper
+    daemon: simple
+    plugs:
+      - network
+      - network-bind
+
+  ctr:
+    command: ctr.wrapper
+    plugs:
+      - network
+      - network-bind
+
+#   kubectl:
+#     command: kubectl
+
+parts:
+  setup:
+    after:
+      - artifacts
+      - wrappers
+    source: build/
+    plugin: dump
+
+  wrappers:
+    source: wrappers/
+    plugin: dump
+    organize:
+      containerd.wrapper: bin/containerd.wrapper
+      ctr.wrapper: bin/ctr.wrapper
+
+  artifacts:
+    source: artifacts/
+    plugin: dump
+
+  kubernetes:
+    after:
+      - setup
+      - containerd
+    source: https://github.com/kubernetes/kubernetes
+    source-type: git
+    plugin: go
+    go-importpath: k8s.io/kubernetes
+    build-packages:
+    - gcc
+    - make
+    - pkg-config
+    override-build: |
+      set -eu
+      . ../../../parts/setup/build/common.sh
+      . ../../../parts/setup/build/lock.sh
+
+      mkdir -p $SNAPCRAFT_PART_INSTALL/bin
+
+      go get k8s.io/kubernetes
+      (
+        cd $GOPATH/src/k8s.io/kubernetes
+        git checkout ${KUBERNETES_COMMIT}
+        make
+      )
+      cp $GOPATH/src/k8s.io/kubernetes/bin/* $SNAPCRAFT_PART_INSTALL/bin/
+
+  containerd:
+    after:
+      - setup
+    source: https://github.com/containerd/containerd
+    source-type: git
+    plugin: go
+    go-importpath: github.com/containerd/containerd
+    build-packages:
+    - gcc
+    - make
+    - pkg-config
+    - btrfs-tools
+    - libseccomp-dev
+    override-build: |
+      set -eu
+      . ../../../parts/setup/build/common.sh
+      . ../../../parts/setup/build/lock.sh
+
+      mkdir -p $SNAPCRAFT_PART_INSTALL/bin
+
+      #  Build Containerd
+      go get github.com/containerd/containerd
+      (
+        cd $GOPATH/src/github.com/containerd/containerd
+        git checkout ${CONTAINERD_COMMIT}
+        make
+      )
+      cp $GOPATH/src/github.com/containerd/containerd/bin/* $SNAPCRAFT_PART_INSTALL/bin/
+      rm $SNAPCRAFT_PART_INSTALL/bin/containerd-stress
+
+      # Build Runc
+      go get github.com/opencontainers/runc
+      (
+        cd $GOPATH/src/github.com/opencontainers/runc
+        git checkout ${RUNC_COMMIT}
+        make BUILDTAGS='seccomp apparmor'
+      )
+      cp $GOPATH/src/github.com/opencontainers/runc/runc $SNAPCRAFT_PART_INSTALL/bin/
+
+    organize:
+      go/src/github.com/containerd/containerd/bin/*: bin/
+      go/src/github.com/opencontainers/runc/runc: bin/runc
+      containerd/install/bin/*: bin/
+    stage-packages:
+    - libnss-myhostname
+    - libnss-resolve
+    - libnss-mymachines
+    - conntrack
+    - aufs-tools
+    - gawk
+    - sed
+    - socat
+    - grep
+    - libssl1.0.0
+    - coreutils
+    - hostname
+    - diffutils
+    stage:
+    - -sbin/xtables-multi
+    - -sbin/iptables*
+    - -lib/xtables

@@ -1,0 +1,49 @@
+#!/bin/bash
+## Modified from the microk8s wraper.  https://github.com/ubuntu/microk8s/blob/master/microk8s-resources/wrappers/run-containerd-with-args
+set -e
+APP="containerd"
+
+export PATH="${SNAP}/usr/sbin:${SNAP}/usr/bin:${SNAP}/sbin:${SNAP}/bin:${PATH}"
+export LD_LIBRARY_PATH="${LD_LIBRARY_PATH}:${SNAP}/lib:${SNAP}/usr/lib:${SNAP}/lib/x86_64-linux-gnu:${SNAP}/usr/lib/x86_64-linux-gnu"
+export LD_LIBRARY_PATH=${SNAP_LIBRARY_PATH}:${LD_LIBRARY_PATH}
+export XDG_RUNTIME_DIR="${SNAP_COMMON}/run"
+mkdir -p "${XDG_RUNTIME_DIR}"
+
+if [ -d "/etc/apparmor.d" ]; then
+  echo "Using a default profile template"
+  cp ${SNAP}/containerd-profile /etc/apparmor.d/cri-containerd.apparmor.d
+  echo "Reloading AppArmor profiles"
+  if ! service apparmor reload
+  then
+    echo "AppArmor profiles loading failed. AppArmor may be unavailable on this host."
+  fi
+fi
+
+if [ -e "${SNAP_DATA}/var/lock/gpu" ]; then
+  RUNTIME="nvidia-container-runtime"
+else
+  RUNTIME="runc"
+fi
+sed 's@${SNAP}@'"${SNAP}"'@g;s@${SNAP_DATA}@'"${SNAP_DATA}"'@g;s@${RUNTIME}@'"${RUNTIME}"'@g' ${SNAP}/containerd-template.toml > ${SNAP_DATA}/containerd.toml
+
+# This is really the only way I could find to get the args passed in correctly.
+declare -a ARGS="($(cat ${SNAP}/args/${APP}))"
+set -a
+. "${SNAP}/args/${APP}-env"
+set +a
+
+# Wait up to two minutes for the default network interface to appear.
+N=0
+until [ ${N} -ge 20 ]
+do
+  ip route | grep default &> /dev/null && break
+  ip -6 route | grep default &> /dev/null && break
+  echo "Waiting for default route to appear. (attempt ${N})"
+  n=$[${N}+1]
+  sleep 6
+done
+
+# Set the path to the Cilium socket correctly for CNI
+export CILIUM_SOCK="${SNAP_DATA}/var/run/cilium/cilium.sock"
+
+exec "${SNAP}/bin/${APP}" "${ARGS[@]}"
