@@ -23,8 +23,8 @@ apps:
       - network
       - network-bind
 
-#   kubectl:
-#     command: kubectl
+  kubectl:
+    command: kubectl
 
 parts:
   setup:
@@ -49,11 +49,11 @@ parts:
     after:
       - setup
       - containerd
-    source: https://github.com/kubernetes/kubernetes
-    source-type: git
-    plugin: go
-    go-importpath: k8s.io/kubernetes
+    plugin: nil
+    build-snaps:
+      - go/1.12/stable
     build-packages:
+    - git
     - gcc
     - make
     - pkg-config
@@ -64,22 +64,22 @@ parts:
 
       mkdir -p $SNAPCRAFT_PART_INSTALL/bin
 
-      go get k8s.io/kubernetes
+      go get -d k8s.io/kubernetes || true
       (
         cd $GOPATH/src/k8s.io/kubernetes
         git checkout ${KUBERNETES_COMMIT}
         make
       )
-      cp $GOPATH/src/k8s.io/kubernetes/bin/* $SNAPCRAFT_PART_INSTALL/bin/
+      cp $GOPATH/src/k8s.io/kubernetes/_output/local/go/bin/* $SNAPCRAFT_PART_INSTALL/bin/
 
   containerd:
     after:
       - setup
-    source: https://github.com/containerd/containerd
-    source-type: git
-    plugin: go
-    go-importpath: github.com/containerd/containerd
+    plugin: nil
+    build-snaps:
+      - go/1.12/stable
     build-packages:
+    - git
     - gcc
     - make
     - pkg-config
