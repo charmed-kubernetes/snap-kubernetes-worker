@@ -17,6 +17,20 @@ apps:
       - network
       - network-bind
 
+  kubelet:
+    command: kubelet.wrapper
+    daemon: simple
+    plugs:
+      - network
+      - network-bind
+
+  kube-proxy:
+    command: kube-proxy
+    daemon: simple
+    plugs:
+      - network
+      - network-bind
+
   ctr:
     command: ctr.wrapper
     plugs:
@@ -24,7 +38,10 @@ apps:
       - network-bind
 
   kubectl:
-    command: kubectl
+    command: kubectl.wrapper
+    plugs:
+      - network
+      - network-bind
 
 parts:
   setup:
@@ -40,6 +57,8 @@ parts:
     organize:
       containerd.wrapper: bin/containerd.wrapper
       ctr.wrapper: bin/ctr.wrapper
+      kubectl.wrapper: bin/kubectl.wrapper
+      kubelet.wrapper: bin/kubelet.wrapper
 
   artifacts:
     source: artifacts/
