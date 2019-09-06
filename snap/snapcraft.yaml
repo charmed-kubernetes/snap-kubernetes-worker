@@ -19,6 +19,10 @@ plugs:
   k8s-kubeproxy:
     flavor: kubeproxy
     interface: kubernetes-support
+  dot-kube:
+    interface: personal-files
+    write:
+    - $HOME/.kube
 
 apps:
   containerd:
@@ -70,8 +74,10 @@ apps:
   kubectl:
     command: kubectl.wrapper
     plugs:
+    - dot-kube
     - firewall-control
     - hardware-observe
+    - home
     - k8s-kubelet
     - mount-observe
     - network-bind
