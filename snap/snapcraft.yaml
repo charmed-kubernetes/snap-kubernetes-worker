@@ -10,6 +10,9 @@ grade: devel
 confinement: devmode
 
 plugs:
+  docker-privileged:
+    interface: docker-support
+    privileged-containers: true
   k8s-kubelet:
     flavor: kubelet
     interface: kubernetes-support
@@ -22,6 +25,7 @@ apps:
     command: containerd.wrapper
     daemon: simple
     plugs:
+    - docker-privileged
     - docker-support
     - firewall-control
     - network-bind
@@ -55,6 +59,7 @@ apps:
   ctr:
     command: ctr.wrapper
     plugs:
+    - docker-privileged
     - docker-support
     - firewall-control
     - network-bind
