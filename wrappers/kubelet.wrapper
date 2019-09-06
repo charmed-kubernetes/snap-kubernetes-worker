@@ -6,5 +6,8 @@ export PATH="${SNAP}/usr/sbin:${SNAP}/usr/bin:${SNAP}/sbin:${SNAP}/bin:${PATH}"
 export LD_LIBRARY_PATH="${LD_LIBRARY_PATH}:${SNAP}/lib:${SNAP}/usr/lib:${SNAP}/lib/x86_64-linux-gnu:${SNAP}/usr/lib/x86_64-linux-gnu"
 export LD_LIBRARY_PATH=${SNAP_LIBRARY_PATH}:${LD_LIBRARY_PATH}
 
+sed 's@${SNAP}@'"${SNAP}"'@g;s@${SNAP_COMMON}@'"${SNAP_COMMON}"'@g' ${SNAP}/kubelet-template.yaml > ${SNAP_DATA}/kubelet.yaml
+
 declare -a ARGS="($(cat ${SNAP}/args/${APP}))"
+echo "RUNNING" "${SNAP}/bin/${APP}" "${ARGS[@]}"
 exec "${SNAP}/bin/${APP}" "${ARGS[@]}"

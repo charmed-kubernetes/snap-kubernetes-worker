@@ -1,15 +1,9 @@
---kubeconfig=${SNAP_DATA}/credentials/kubelet.config
---cert-dir=${SNAP_DATA}/certs
---client-ca-file=${SNAP_DATA}/certs/ca.crt
---anonymous-auth=false
---network-plugin=kubenet
---root-dir=${SNAP_COMMON}/var/lib/kubelet
+--config ${SNAP_DATA}/kubelet.yaml
+--root-dir ${SNAP_COMMON}/var/lib/kubelet
+--cert-dir ${SNAP_COMMON}/certs
+--runtime-cgroups=/systemd/system.slice
+--kubelet-cgroups=/systemd/system.slice
 --fail-swap-on=false
---pod-cidr=10.1.1.0/24
---non-masquerade-cidr=10.152.183.0/24
---cni-bin-dir=${SNAP}/opt/cni/bin/
---feature-gates=DevicePlugins=true
---eviction-hard="memory.available<100Mi,nodefs.available<1Gi,imagefs.available<1Gi"
+--feature-gates=DevicePlugins=false
 --container-runtime=remote
 --container-runtime-endpoint=${SNAP_COMMON}/run/containerd.sock
---node-labels="microk8s.io/cluster=true"

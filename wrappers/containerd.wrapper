@@ -24,6 +24,7 @@ if [ -e "${SNAP_DATA}/var/lock/gpu" ]; then
 else
   RUNTIME="runc"
 fi
+
 sed 's@${SNAP}@'"${SNAP}"'@g;s@${SNAP_DATA}@'"${SNAP_DATA}"'@g;s@${RUNTIME}@'"${RUNTIME}"'@g' ${SNAP}/containerd-template.toml > ${SNAP_DATA}/containerd.toml
 
 # This is really the only way I could find to get the args passed in correctly.

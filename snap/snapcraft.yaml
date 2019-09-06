@@ -112,9 +112,112 @@ parts:
     source: artifacts/
     plugin: dump
 
+  runc:
+    after:
+      - setup
+    plugin: nil
+    build-snaps:
+      - go/1.12/stable
+    build-packages:
+    - git
+    - gcc
+    - make
+    - pkg-config
+    - btrfs-tools
+    - libseccomp-dev
+    override-build: |
+      set -eu
+      . ../../../parts/setup/build/common.sh
+      . ../../../parts/setup/build/lock.sh
+
+      mkdir -p $SNAPCRAFT_PART_INSTALL/bin
+
+      go get github.com/opencontainers/runc
+      (
+        cd $GOPATH/src/github.com/opencontainers/runc
+        git checkout ${RUNC_COMMIT}
+        make BUILDTAGS='seccomp apparmor'
+      )
+      cp $GOPATH/src/github.com/opencontainers/runc/runc $SNAPCRAFT_PART_INSTALL/bin/
+
+    organize:
+      go/src/github.com/opencontainers/runc/runc: bin/runc
+      containerd/install/bin/*: bin/
+    stage-packages:
+    - libnss-myhostname
+    - libnss-resolve
+    - libnss-mymachines
+    - conntrack
+    - aufs-tools
+    - gawk
+    - sed
+    - socat
+    - grep
+    - libssl1.0.0
+    - coreutils
+    - hostname
+    - diffutils
+    stage:
+    - -sbin/xtables-multi
+    - -sbin/iptables*
+    - -lib/xtables
+
+  containerd:
+    after:
+      - setup
+      - runc
+    plugin: nil
+    build-snaps:
+      - go/1.12/stable
+    build-packages:
+    - git
+    - gcc
+    - make
+    - pkg-config
+    - btrfs-tools
+    - libseccomp-dev
+    override-build: |
+      set -eu
+      . ../../../parts/setup/build/common.sh
+      . ../../../parts/setup/build/lock.sh
+
+      mkdir -p $SNAPCRAFT_PART_INSTALL/bin
+
+      go get github.com/containerd/containerd
+      (
+        cd $GOPATH/src/github.com/containerd/containerd
+        git checkout ${CONTAINERD_COMMIT}
+        make
+      )
+      cp $GOPATH/src/github.com/containerd/containerd/bin/* $SNAPCRAFT_PART_INSTALL/bin/
+      rm $SNAPCRAFT_PART_INSTALL/bin/containerd-stress
+
+    organize:
+      go/src/github.com/containerd/containerd/bin/*: bin/
+      containerd/install/bin/*: bin/
+    stage-packages:
+    - libnss-myhostname
+    - libnss-resolve
+    - libnss-mymachines
+    - conntrack
+    - aufs-tools
+    - gawk
+    - sed
+    - socat
+    - grep
+    - libssl1.0.0
+    - coreutils
+    - hostname
+    - diffutils
+    stage:
+    - -sbin/xtables-multi
+    - -sbin/iptables*
+    - -lib/xtables
+
   kubernetes:
     after:
       - setup
+      - runc
       - containerd
     plugin: nil
     build-snaps:
@@ -138,65 +241,3 @@ parts:
         make
       )
       cp $GOPATH/src/k8s.io/kubernetes/_output/local/go/bin/* $SNAPCRAFT_PART_INSTALL/bin/
-
-  containerd:
-    after:
-      - setup
-    plugin: nil
-    build-snaps:
-      - go/1.12/stable
-    build-packages:
-    - git
-    - gcc
-    - make
-    - pkg-config
-    - btrfs-tools
-    - libseccomp-dev
-    override-build: |
-      set -eu
-      . ../../../parts/setup/build/common.sh
-      . ../../../parts/setup/build/lock.sh
-
-      mkdir -p $SNAPCRAFT_PART_INSTALL/bin
-
-      #  Build Containerd
-      go get github.com/containerd/containerd
-      (
-        cd $GOPATH/src/github.com/containerd/containerd
-        git checkout ${CONTAINERD_COMMIT}
-        make
-      )
-      cp $GOPATH/src/github.com/containerd/containerd/bin/* $SNAPCRAFT_PART_INSTALL/bin/
-      rm $SNAPCRAFT_PART_INSTALL/bin/containerd-stress
-
-      # Build Runc
-      go get github.com/opencontainers/runc
-      (
-        cd $GOPATH/src/github.com/opencontainers/runc
-        git checkout ${RUNC_COMMIT}
-        make BUILDTAGS='seccomp apparmor'
-      )
-      cp $GOPATH/src/github.com/opencontainers/runc/runc $SNAPCRAFT_PART_INSTALL/bin/
-
-    organize:
-      go/src/github.com/containerd/containerd/bin/*: bin/
-      go/src/github.com/opencontainers/runc/runc: bin/runc
-      containerd/install/bin/*: bin/
-    stage-packages:
-    - libnss-myhostname
-    - libnss-resolve
-    - libnss-mymachines
-    - conntrack
-    - aufs-tools
-    - gawk
-    - sed
-    - socat
-    - grep
-    - libssl1.0.0
-    - coreutils
-    - hostname
-    - diffutils
-    stage:
-    - -sbin/xtables-multi
-    - -sbin/iptables*
-    - -lib/xtables

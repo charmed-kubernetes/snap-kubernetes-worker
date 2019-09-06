@@ -12,3 +12,9 @@ the build to use `lxd` instead.
 ```bash
 SNAPCRAFT_BUILD_ENVIRONMENT=lxd snapcraft
 ```
+
+Connect interfaces.
+
+```bash
+for i in docker-privileged k8s-kubelet k8s-kubeproxy dot-kube docker-support firewall-control hardware-observe kernel-module-control mount-observe network-control process-control system-observe kernel-module-observe ; do sudo snap connect kubernetes-worker:$i ; done
+```
