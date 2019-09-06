@@ -28,6 +28,7 @@ apps:
     - docker-privileged
     - docker-support
     - firewall-control
+    - kernel-module-control
     - network-bind
     - network-control
 
@@ -50,6 +51,7 @@ apps:
     plugs:
     - firewall-control
     - k8s-kubeproxy
+    - kernel-module-control
     - kernel-module-observe
     - mount-observe
     - network-bind
