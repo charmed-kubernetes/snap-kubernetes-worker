@@ -9,39 +9,87 @@ description: |
 grade: devel
 confinement: devmode
 
+plugs:
+  docker-privileged:
+    interface: docker-support
+    privileged-containers: true
+  k8s-kubelet:
+    flavor: kubelet
+    interface: kubernetes-support
+  k8s-kubeproxy:
+    flavor: kubeproxy
+    interface: kubernetes-support
+  dot-kube:
+    interface: personal-files
+    write:
+    - $HOME/.kube
+
+# If hooks are used, be sure they don't inherit the top-level plugs
+#hooks. Eg:
+#  configure:
+#    plugs:
+#    - network
+
 apps:
   containerd:
     command: containerd.wrapper
     daemon: simple
     plugs:
-      - network
-      - network-bind
+    - docker-privileged
+    - docker-support
+    - firewall-control
+    - kernel-module-control
+    - network-bind
+    - network-control
 
   kubelet:
     command: kubelet.wrapper
     daemon: simple
     plugs:
-      - network
-      - network-bind
+    - firewall-control
+    - hardware-observe
+    - k8s-kubelet
+    - mount-observe
+    - network-bind
+    - network-control
+    - process-control
+    - system-observe
 
   kube-proxy:
     command: kube-proxy
     daemon: simple
     plugs:
-      - network
-      - network-bind
+    - firewall-control
+    - k8s-kubeproxy
+    - kernel-module-control
+    - kernel-module-observe
+    - mount-observe
+    - network-bind
+    - network-observe
+    - system-observe
 
   ctr:
     command: ctr.wrapper
     plugs:
-      - network
-      - network-bind
+    - docker-privileged
+    - docker-support
+    - firewall-control
+    - network-bind
+    - network-control
 
   kubectl:
     command: kubectl.wrapper
     plugs:
-      - network
-      - network-bind
+    - dot-kube
+    - firewall-control
+    - hardware-observe
+    - home
+    - k8s-kubelet
+    - mount-observe
+    - network-bind
+    - network-control
+    - process-control
+    - system-observe
 
 parts:
   setup:
