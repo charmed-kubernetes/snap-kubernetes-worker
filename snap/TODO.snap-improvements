@@ -1,0 +1,52 @@
+# Improvements
+
+For the initial iterations of the snap, there are several things that were done
+that should be improved going forward (in no particular order):
+
+## Phase 1
+* update to 'confinement: strict'
+* update to 'grade: stable'
+* attempt to relocate as much as possible to snap-specific directories (ie,
+  SNAP, SNAP_DATA, SNAP_COMMON, SNAP_USER_DATA and SNAP_USER_COMMON)
+* put large directories in SNAP_COMMON to avoid costly resource consumption on
+  refresh
+* when unable to relocate to snap-specific directories (eg, recompiling or
+  option arguments are not an option), use layouts. Eg, in
+  the snapcraft.yaml:
+    passthrough:
+      layout:
+        /etc/cni:
+          symlink: $SNAP_COMMON/etc/cni
+        /opt/cni:
+          symlink: $SNAP/opt/cni
+        /var/lib/cni:
+          symlink: $SNAP_COMMON/var/lib/cni
+  see https://snapcraft.io/docs/snap-layouts
+* use rest APIs with cert auth due to limitations in go libs that etcd uses
+  surrounding UNIX sockets (not a problem if etcd is remote)
+  - https://github.com/ubuntu/microk8s/pull/607#pullrequestreview-278033874
+* ensure newly added hooks have their own 'plugs' so they don't automatically
+  get docker-privileged, k8s-kubelet, k8s-kubeproxy, etc. Eg, if add the
+  configure hook, use:
+    hooks:
+      configure:
+        plugs:
+        - network
+* determine if personal-files interface is required for kubectl, and if not,
+  remove dot-kube
+* avoid use of sudo within the snap itself
+* always use snapctl instead of systemctl
+* ensure that only verified cert auth is used for all network APIs
+
+## Phase 2 or earlier
+* remove the need for kernel-module-control and instead adjust docker-support
+  (for containerd/ctr) and kubernetes-support (for kube-proxy) to use the kmod
+  backend to have snapd load the modules we need on our behalf
+* determine if docker-privileged is required and if not, drop it
+* determine if kubectl can only use the rest APIs and reduce its plugs to
+  'network' (thus removing all the privileged interfaces)
+* limit access to certs/etc to specific group to avoid local privilege
+  escalation (per Tim, phase 2). See:
+  - https://github.com/ubuntu/microk8s/pull/608
+* determine if home interface is required for kubectl, and if not, remove or
+  request that it not be auto-connected
