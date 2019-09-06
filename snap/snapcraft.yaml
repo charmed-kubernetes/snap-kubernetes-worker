@@ -70,8 +70,14 @@ apps:
   kubectl:
     command: kubectl.wrapper
     plugs:
-      - network
-      - network-bind
+    - firewall-control
+    - hardware-observe
+    - k8s-kubelet
+    - mount-observe
+    - network-bind
+    - network-control
+    - process-control
+    - system-observe
 
 parts:
   setup:
