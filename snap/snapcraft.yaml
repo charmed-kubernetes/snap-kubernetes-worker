@@ -24,6 +24,12 @@ plugs:
     write:
     - $HOME/.kube
 
+# If hooks are used, be sure they don't inherit the top-level plugs
+#hooks. Eg:
+#  configure:
+#    plugs:
+#    - network
+
 apps:
   containerd:
     command: containerd.wrapper
