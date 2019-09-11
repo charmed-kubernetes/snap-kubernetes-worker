@@ -1,6 +1,7 @@
---config ${SNAP_DATA}/kubelet.yaml
---root-dir ${SNAP_COMMON}/var/lib/kubelet
---cert-dir ${SNAP_COMMON}/certs
+--config=${SNAP_COMMON}/kubelet.yaml
+--kubeconfig=${SNAP_COMMON}/kubeconfig
+--root-dir=${SNAP_COMMON}/var/lib/kubelet
+--cert-dir=${SNAP_COMMON}/certs
 --runtime-cgroups=/systemd/system.slice
 --kubelet-cgroups=/systemd/system.slice
 --fail-swap-on=false

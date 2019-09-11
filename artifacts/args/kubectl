@@ -1,1 +1,1 @@
---kubeconfig=${SNAP_DATA}/credentials/client.config
+--kubeconfig=${HOME}/.kube/config

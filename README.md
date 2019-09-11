@@ -2,6 +2,33 @@
 
 This is currently a work in progress.
 
+## Installing
+
+Install via `snap`.
+
+```bash
+snap install kubernetes-worker
+```
+
+Then connect all the interfaces.
+
+```bash
+for i in docker-privileged k8s-kubelet k8s-kubeproxy dot-kube docker-support firewall-control hardware-observe kernel-module-control mount-observe network-control process-control system-observe kernel-module-observe ; do sudo snap connect kubernetes-worker:$i ; done
+```
+
+## Configuration
+
+### kubeconfig
+
+We must feed in a `kubeconfig` file to allow the worker to enrol with the 
+cluster.
+
+Example:
+
+```bash
+snap set kubernetes-worker kubeconfig="$(cat ~/.kube/config)"
+```
+
 ## Developer notes
 
 When building with `snapcraft`'s default environment (thus using `multipass`),
@@ -11,10 +38,4 @@ the build to use `lxd` instead.
 
 ```bash
 SNAPCRAFT_BUILD_ENVIRONMENT=lxd snapcraft
-```
-
-Connect interfaces.
-
-```bash
-for i in docker-privileged k8s-kubelet k8s-kubeproxy dot-kube docker-support firewall-control hardware-observe kernel-module-control mount-observe network-control process-control system-observe kernel-module-observe ; do sudo snap connect kubernetes-worker:$i ; done
 ```

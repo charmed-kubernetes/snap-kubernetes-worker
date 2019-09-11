@@ -1,3 +1,4 @@
+#!/bin/bash
 set -eu
 
 export CONTAINERD_COMMIT="${CONTAINERD_COMMIT:-bb71b10fd8f58240ca47fbb579b9d1028eea7c84}"
