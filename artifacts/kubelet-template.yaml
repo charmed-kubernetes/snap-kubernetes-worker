@@ -1,8 +1,11 @@
 apiVersion: kubelet.config.k8s.io/v1beta1
 kind: KubeletConfiguration
-networkPlugin: kubenet
-rootDir: ${SNAP_COMMON}/var/lib/kubelet
 failSwapOn: false
-cniBinDir: ${SNAP}/opt/cni/bin/
+networkPlugin: cni
+rootDir: ${SNAP_COMMON}/kubelet/
+certDir: ${SNAP_COMMON}/certs/
 containerRuntime: remote
 containerRuntimeEndpoint: ${SNAP_COMMON}/run/containerd.sock
+authentication:
+  x509:
+    clientCAFile: ${SNAP_COMMON}/certs/ca.crt

@@ -4,7 +4,7 @@ version: '0.0.1'
 summary: A complete Kubernetes worker
 description: |
   A fully functional Kubernetes worker in a snap.  This includes kubelet,
-  kube-proxy, kubectl, containerd and ctr.
+  kubectl, containerd and ctr.
 
 grade: devel
 confinement: devmode
@@ -16,77 +16,73 @@ plugs:
   k8s-kubelet:
     flavor: kubelet
     interface: kubernetes-support
-  k8s-kubeproxy:
-    flavor: kubeproxy
-    interface: kubernetes-support
   dot-kube:
     interface: personal-files
     write:
-    - $HOME/.kube
+      - $HOME/.kube
 
 hooks:
   configure:
     plugs:
       - dot-kube
 
+layout:
+  /usr/libexec:
+    bind: $SNAP_COMMON/libexec
+  /etc/cni/net.d:
+    bind: $SNAP_COMMON/cni/net.d
+  /etc/kube-flannel:
+    bind: $SNAP_COMMON/flannel
+  /var/lib/flannel:
+    bind: $SNAP_COMMON/flannel
+  /var/lib/weave:
+    bind: $SNAP_COMMON/weave
+
 apps:
   containerd:
     command: containerd.wrapper
     daemon: simple
     plugs:
-    - docker-privileged
-    - docker-support
-    - firewall-control
-    - kernel-module-control
-    - network-bind
-    - network-control
+      - docker-privileged
+      - docker-support
+      - firewall-control
+      - kernel-module-control
+      - network-bind
+      - network-control
   kubelet:
     command: kubelet.wrapper
     daemon: simple
     plugs:
-    - dot-kube
-    - firewall-control
-    - hardware-observe
-    - k8s-kubelet
-    - mount-observe
-    - network-bind
-    - network-control
-    - process-control
-    - system-observe
-  kube-proxy:
-    command: kube-proxy.wrapper
-    daemon: simple
-    plugs:
-    - dot-kube
-    - firewall-control
-    - k8s-kubeproxy
-    - kernel-module-control
-    - kernel-module-observe
-    - mount-observe
-    - network-bind
-    - network-observe
-    - system-observe
+      - dot-kube
+      - firewall-control
+      - hardware-observe
+      - k8s-kubelet
+      - mount-observe
+      - network-bind
+      - network-control
+      - process-control
+      - system-observe
   ctr:
     command: ctr.wrapper
     plugs:
-    - docker-privileged
-    - docker-support
-    - firewall-control
-    - network-bind
-    - network-control
+      - docker-privileged
+      - docker-support
+      - firewall-control
+      - network-bind
+      - network-control
   kubectl:
     command: kubectl.wrapper
     plugs:
-    - dot-kube
-    - firewall-control
-    - hardware-observe
-    - home
-    - k8s-kubelet
-    - mount-observe
-    - network-bind
-    - network-control
-    - process-control
-    - system-observe
+      - dot-kube
+      - firewall-control
+      - hardware-observe
+      - home
+      - k8s-kubelet
+      - mount-observe
+      - network-bind
+      - network-control
+      - process-control
+      - system-observe
 
 parts:
   setup:
@@ -103,7 +99,6 @@ parts:
       ctr.wrapper: bin/ctr.wrapper
       kubectl.wrapper: bin/kubectl.wrapper
       kubelet.wrapper: bin/kubelet.wrapper
-      kube-proxy.wrapper: bin/kube-proxy.wrapper
   artifacts:
     source: artifacts/
     plugin: dump
@@ -114,12 +109,12 @@ parts:
     build-snaps:
       - go/1.12/stable
     build-packages:
-    - git
-    - gcc
-    - make
-    - pkg-config
-    - btrfs-tools
-    - libseccomp-dev
+      - git
+      - gcc
+      - make
+      - pkg-config
+      - btrfs-tools
+      - libseccomp-dev
     override-build: |
       set -eu
       . ../../../parts/setup/build/common.sh
@@ -138,23 +133,23 @@ parts:
       go/src/github.com/opencontainers/runc/runc: bin/runc
       containerd/install/bin/*: bin/
     stage-packages:
-    - libnss-myhostname
-    - libnss-resolve
-    - libnss-mymachines
-    - conntrack
-    - aufs-tools
-    - gawk
-    - sed
-    - socat
-    - grep
-    - libssl1.0.0
-    - coreutils
-    - hostname
-    - diffutils
+      - libnss-myhostname
+      - libnss-resolve
+      - libnss-mymachines
+      - conntrack
+      - aufs-tools
+      - gawk
+      - sed
+      - socat
+      - grep
+      - libssl1.0.0
+      - coreutils
+      - hostname
+      - diffutils
     stage:
-    - -sbin/xtables-multi
-    - -sbin/iptables*
-    - -lib/xtables
+      - -sbin/xtables-multi
+      - -sbin/iptables*
+      - -lib/xtables
   containerd:
     after:
       - setup
@@ -163,12 +158,12 @@ parts:
     build-snaps:
       - go/1.12/stable
     build-packages:
-    - git
-    - gcc
-    - make
-    - pkg-config
-    - btrfs-tools
-    - libseccomp-dev
+      - git
+      - gcc
+      - make
+      - pkg-config
+      - btrfs-tools
+      - libseccomp-dev
     override-build: |
       set -eu
       . ../../../parts/setup/build/common.sh
@@ -188,23 +183,23 @@ parts:
       go/src/github.com/containerd/containerd/bin/*: bin/
       containerd/install/bin/*: bin/
     stage-packages:
-    - libnss-myhostname
-    - libnss-resolve
-    - libnss-mymachines
-    - conntrack
-    - aufs-tools
-    - gawk
-    - sed
-    - socat
-    - grep
-    - libssl1.0.0
-    - coreutils
-    - hostname
-    - diffutils
+      - libnss-myhostname
+      - libnss-resolve
+      - libnss-mymachines
+      - conntrack
+      - aufs-tools
+      - gawk
+      - sed
+      - socat
+      - grep
+      - libssl1.0.0
+      - coreutils
+      - hostname
+      - diffutils
     stage:
-    - -sbin/xtables-multi
-    - -sbin/iptables*
-    - -lib/xtables
+      - -sbin/xtables-multi
+      - -sbin/iptables*
+      - -lib/xtables
   kubernetes:
     after:
       - setup
@@ -214,12 +209,12 @@ parts:
     build-snaps:
       - go/1.12/stable
     build-packages:
-    - git
-    - gcc
-    - make
-    - pkg-config
+      - git
+      - gcc
+      - make
+      - pkg-config
     stage-packages:
-    - conntrack
+      - conntrack
     override-build: |
       set -eu
       . ../../../parts/setup/build/common.sh
@@ -234,3 +229,28 @@ parts:
         make
       )
       cp $GOPATH/src/k8s.io/kubernetes/_output/local/go/bin/* $SNAPCRAFT_PART_INSTALL/bin/
+  cni-plugins:
+    after:
+      - kubernetes
+    plugin: nil
+    build-snaps:
+      - go/1.12/stable
+    build-packages:
+      - git
+      - gcc
+      - make
+      - pkg-config
+    override-build: |
+      set -eu
+      . ../../../parts/setup/build/common.sh
+      . ../../../parts/setup/build/lock.sh
+
+      mkdir -p $SNAPCRAFT_PART_INSTALL/bin/cni
+
+      go get -d github.com/containernetworking/plugins || true
+      (
+        cd $GOPATH/src/github.com/containernetworking/plugins
+        git checkout ${CNI_PLUGINS_COMMIT}
+        ./build_linux.sh
+      )
+      cp $GOPATH/src/github.com/containernetworking/plugins/bin/* $SNAPCRAFT_PART_INSTALL/bin/cni/

@@ -6,5 +6,4 @@ if ! test -z "$KUBECONFIG";
 then
     echo "$KUBECONFIG" > ${SNAP_COMMON}/kubeconfig
     snapctl restart ${SNAP_NAME}.kubelet
-    snapctl restart ${SNAP_NAME}.kube-proxy
 fi

@@ -1,5 +1,6 @@
 #!/bin/bash
-## Modified from the microk8s wraper.  https://github.com/ubuntu/microk8s/blob/master/microk8s-resources/wrappers/run-containerd-with-args
+## Modified from the microk8s wrapper. 
+## https://github.com/ubuntu/microk8s/blob/master/microk8s-resources/wrappers/run-containerd-with-args
 set -e
 APP="containerd"
 
@@ -25,26 +26,12 @@ else
   RUNTIME="runc"
 fi
 
-sed 's@${SNAP}@'"${SNAP}"'@g;s@${SNAP_DATA}@'"${SNAP_DATA}"'@g;s@${RUNTIME}@'"${RUNTIME}"'@g' ${SNAP}/containerd-template.toml > ${SNAP_DATA}/containerd.toml
+sed 's@${SNAP}@'"${SNAP}"'@g;s@${SNAP_DATA}@'"${SNAP_DATA}"'@g;s@${SNAP_COMMON}@'"${SNAP_COMMON}"'@g;s@${RUNTIME}@'"${RUNTIME}"'@g' ${SNAP}/containerd-template.toml > ${SNAP_DATA}/containerd.toml
 
 # This is really the only way I could find to get the args passed in correctly.
 declare -a ARGS="($(cat ${SNAP}/args/${APP}))"
 set -a
 . "${SNAP}/args/${APP}-env"
 set +a
-
-# Wait up to two minutes for the default network interface to appear.
-N=0
-until [ ${N} -ge 20 ]
-do
-  ip route | grep default &> /dev/null && break
-  ip -6 route | grep default &> /dev/null && break
-  echo "Waiting for default route to appear. (attempt ${N})"
-  n=$[${N}+1]
-  sleep 6
-done
-
-# Set the path to the Cilium socket correctly for CNI
-export CILIUM_SOCK="${SNAP_DATA}/var/run/cilium/cilium.sock"
 
 exec "${SNAP}/bin/${APP}" "${ARGS[@]}"

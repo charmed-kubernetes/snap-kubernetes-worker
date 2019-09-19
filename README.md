@@ -13,7 +13,7 @@ snap install kubernetes-worker
 Then connect all the interfaces.
 
 ```bash
-for i in docker-privileged k8s-kubelet k8s-kubeproxy dot-kube docker-support firewall-control hardware-observe kernel-module-control mount-observe network-control process-control system-observe kernel-module-observe ; do sudo snap connect kubernetes-worker:$i ; done
+for i in docker-privileged k8s-kubelet dot-kube docker-support firewall-control hardware-observe kernel-module-control mount-observe network-control process-control system-observe; do snap connect kubernetes-worker:$i; done
 ```
 
 ## Configuration

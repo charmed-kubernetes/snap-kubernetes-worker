@@ -5,4 +5,4 @@ APP="kubectl"
 export PATH="$SNAP/usr/sbin:$SNAP/usr/bin:$SNAP/sbin:$SNAP/bin:$PATH"
 
 declare -a ARGS="($(cat $SNAP/args/${APP}))"
-"${SNAP}/${APP}" "${ARGS[@]}" "$@"
+exec "${SNAP}/bin/${APP}" "${ARGS[@]}" "$@"

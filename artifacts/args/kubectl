@@ -1,1 +1,1 @@
---kubeconfig=${HOME}/.kube/config
+--kubeconfig=${SNAP_COMMON}/kubeconfig
