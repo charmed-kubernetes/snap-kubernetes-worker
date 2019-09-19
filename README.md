@@ -29,6 +29,16 @@ Example:
 snap set kubernetes-worker kubeconfig="$(cat ~/.kube/config)"
 ```
 
+### cacert
+
+We also need to feed in a `ca.cert` to allow Kubernetes to get data from the kubelet.
+
+Example:
+
+```bash
+snap set kubernetes-worker cacert="$(cat ~/ca.crt)"
+```
+
 ## Developer notes
 
 When building with `snapcraft`'s default environment (thus using `multipass`),
@@ -37,5 +47,5 @@ how to expand the `multipass` VM's memory via `snapcraft`'s CLI, so we must forc
 the build to use `lxd` instead.
 
 ```bash
-SNAPCRAFT_BUILD_ENVIRONMENT=lxd snapcraft
+snapcraft --use-lxd
 ```

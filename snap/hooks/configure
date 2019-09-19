@@ -7,3 +7,10 @@ then
     echo "$KUBECONFIG" > ${SNAP_COMMON}/kubeconfig
     snapctl restart ${SNAP_NAME}.kubelet
 fi
+
+declare -r CACERT="$(snapctl get cacert)"
+if ! test -z "$CACERT";
+then
+    echo "$CACERT" > ${SNAP_COMMON}/certs/ca.crt
+    snapctl restart ${SNAP_NAME}.kubelet
+fi
