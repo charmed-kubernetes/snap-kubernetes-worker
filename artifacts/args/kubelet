@@ -3,8 +3,5 @@
 --root-dir=${SNAP_COMMON}/kubelet/
 --cert-dir=${SNAP_COMMON}/certs/
 --cni-bin-dir=${SNAP}/bin/cni/
---runtime-cgroups=/systemd/system.slice
---kubelet-cgroups=/systemd/system.slice
---feature-gates=DevicePlugins=false
 --container-runtime=remote
 --container-runtime-endpoint=unix:///${SNAP_COMMON}/run/containerd.sock
