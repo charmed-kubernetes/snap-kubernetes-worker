@@ -7,7 +7,7 @@ description: |
   kubectl, containerd and ctr.
 
 grade: devel
-confinement: devmode
+confinement: strict
 
 plugs:
   docker-privileged:
@@ -27,16 +27,24 @@ hooks:
       - dot-kube
 
 layout:
+  /sbin:
+    bind: $SNAP/bin
   /usr/libexec:
     bind: $SNAP_COMMON/libexec
+  /usr/local/bin:
+    bind: $SNAP/bin
   /etc/cni/net.d:
     bind: $SNAP_COMMON/cni/net.d
   /etc/kube-flannel:
     bind: $SNAP_COMMON/flannel
+  /var/lib/kubelet:
+    bind: $SNAP_COMMON/kubelet/lib
   /var/lib/flannel:
-    bind: $SNAP_COMMON/flannel
-  /var/lib/weave:
-    bind: $SNAP_COMMON/weave
+    bind: $SNAP_COMMON/flannel/lib
+  /var/lib/kube-proxy:
+    bind: $SNAP_COMMON/kube-proxy/lib
+  /var/log:
+    bind: $SNAP_DATA/log
 
 apps:
   containerd:
@@ -215,6 +223,7 @@ parts:
       - pkg-config
     stage-packages:
       - conntrack
+      - ipset
     override-build: |
       set -eu
       . ../../../parts/setup/build/common.sh

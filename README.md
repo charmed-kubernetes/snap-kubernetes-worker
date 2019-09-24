@@ -39,6 +39,28 @@ Example:
 snap set kubernetes-worker cacert="$(cat ~/ca.crt)"
 ```
 
+## Commands
+
+## ctr
+
+Access the underlying containerd CLI.  Must be used with `sudo`.
+
+Example:
+
+```bash
+sudo kubernetes-worker.ctr --namespace=k8s.io containers ls
+```
+
+## kubectl
+
+Run the Kubernetes CLI within the context of the Snap.
+
+Example:
+
+```bash
+kubernetes-worker.kubectl get all --all-namespaces
+```
+
 ## Developer notes
 
 When building with `snapcraft`'s default environment (thus using `multipass`),
