@@ -32,6 +32,4 @@ profile cri-containerd.apparmor.d flags=(attach_disconnected,mediate_deleted) {
   ptrace (trace,read) peer=cri-containerd.apparmor.d,
   signal (receive) peer=snap.kubernetes-worker.containerd,
   signal (receive) peer=snap.kubernetes-worker.kubelet,
-
-  /run/flannel/{,**} rwk,
 }

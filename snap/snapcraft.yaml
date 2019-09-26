@@ -27,7 +27,11 @@ hooks:
       - dot-kube
 
 layout:
-  /sbin:
+  /sbin/ipset:
+    bind: $SNAP/bin/ipset
+  /usr/sbin:
+    bind: $SNAP/bin
+  /opt/bin:
     bind: $SNAP/bin
   /usr/libexec:
     bind: $SNAP_COMMON/libexec
@@ -37,6 +41,8 @@ layout:
     bind: $SNAP_COMMON/cni/net.d
   /etc/kube-flannel:
     bind: $SNAP_COMMON/flannel
+  /var/lib/cni:
+    bind: $SNAP_COMMON/cni/lib
   /var/lib/kubelet:
     bind: $SNAP_COMMON/kubelet/lib
   /var/lib/flannel:
@@ -57,6 +63,7 @@ apps:
       - kernel-module-control
       - network-bind
       - network-control
+      - mount-observe
   kubelet:
     command: kubelet.wrapper
     daemon: simple
