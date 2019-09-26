@@ -6,8 +6,5 @@ if [ -d /run/flannel ]; then
     rm -rf /run/flannel
 fi
 
-ifconfig cni0 down
-ifconfig flannel.1 down
-
 ip link delete cni0
 ip link delete flannel.1

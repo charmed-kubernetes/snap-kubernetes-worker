@@ -25,6 +25,10 @@ hooks:
   configure:
     plugs:
       - dot-kube
+  remove:
+    plugs:
+      - network-control
+      - k8s-kubelet
 
 layout:
   /sbin/ipset:
