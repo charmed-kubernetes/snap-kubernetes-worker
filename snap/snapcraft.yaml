@@ -33,26 +33,16 @@ hooks:
 layout:
   /sbin/ipset:
     bind: $SNAP/bin/ipset
-  /usr/sbin:
-    bind: $SNAP/bin
-  /opt/bin:
-    bind: $SNAP/bin
-  /usr/libexec:
-    bind: $SNAP_COMMON/libexec
   /usr/local/bin:
     bind: $SNAP/bin
-  /etc/cni/net.d:
-    bind: $SNAP_COMMON/cni/net.d
-  /etc/kube-flannel:
-    bind: $SNAP_COMMON/flannel
   /var/lib/cni:
-    bind: $SNAP_COMMON/cni/lib
+    bind: $SNAP_DATA/cni
   /var/lib/kubelet:
-    bind: $SNAP_COMMON/kubelet/lib
-  /var/lib/flannel:
-    bind: $SNAP_COMMON/flannel/lib
+    bind: $SNAP_DATA/kubelet
   /var/lib/kube-proxy:
-    bind: $SNAP_COMMON/kube-proxy/lib
+    bind: $SNAP_DATA/kube-proxy
+  /etc/cni/net.d:
+    bind: $SNAP_DATA/cni/net.d
   /var/log:
     bind: $SNAP_DATA/log
 

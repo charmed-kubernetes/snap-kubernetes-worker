@@ -44,7 +44,7 @@ oom_score = 0
         runtime_root = ""
     [plugins.cri.cni]
       bin_dir = "${SNAP}/bin/cni"
-      conf_dir = "${SNAP_COMMON}/cni/net.d"
+      conf_dir = "${SNAP_DATA}/cni/net.d"
       conf_template = ""
     [plugins.cri.registry]
       [plugins.cri.registry.mirrors]
