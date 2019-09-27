@@ -7,13 +7,13 @@ This is currently a work in progress.
 Install via `snap`.
 
 ```bash
-snap install kubernetes-worker
+sudo snap install kubernetes-worker
 ```
 
 Then connect all the interfaces.
 
 ```bash
-for i in docker-privileged k8s-kubelet dot-kube docker-support firewall-control hardware-observe kernel-module-control mount-observe network-control process-control system-observe; do snap connect kubernetes-worker:$i; done
+sudo snap connect kubernetes-worker:kernel-module-control
 ```
 
 ## Configuration
@@ -26,7 +26,7 @@ cluster.
 Example:
 
 ```bash
-snap set kubernetes-worker kubeconfig="$(cat ~/.kube/config)"
+sudo snap set kubernetes-worker kubeconfig="$(cat ~/.kube/config)"
 ```
 
 ### cacert
@@ -36,7 +36,7 @@ We also need to feed in a `ca.cert` to allow Kubernetes to get data from the kub
 Example:
 
 ```bash
-snap set kubernetes-worker cacert="$(cat ~/ca.crt)"
+sudo snap set kubernetes-worker cacert="$(cat ~/ca.crt)"
 ```
 
 ## Commands
@@ -63,11 +63,29 @@ kubernetes-worker.kubectl get all --all-namespaces
 
 ## Developer notes
 
-When building with `snapcraft`'s default environment (thus using `multipass`),
-the `kubernetes` part will fail due to running out of memory.  I cannot see
-how to expand the `multipass` VM's memory via `snapcraft`'s CLI, so we must force
-the build to use `lxd` instead.
+When building with `snapcraft`, due to the snap using `core18`, the build will
+take place within a `multipass` container.  We need to up the default memory
+for this container, otherwise the build will fail.  We can do this with the
+following command.
 
 ```bash
-snapcraft --use-lxd
+SNAPCRAFT_BUILD_ENVIRONMENT_MEMORY=8G snapcraft
+```
+
+We can also add cores to make the build faster.
+
+```bash
+SNAPCRAFT_BUILD_ENVIRONMENT_MEMORY=8G SNAPCRAFT_BUILD_ENVIRONMENT_CPU=8 snapcraft
+```
+
+Install the built snap.
+
+```bash
+sudo snap install ./kubernetes-worker_*.snap --dangerous
+```
+
+Connect all the interfaces.
+
+```bash
+for i in docker-privileged k8s-kubelet dot-kube docker-support firewall-control hardware-observe kernel-module-control mount-observe network-control process-control system-observe; do snap connect kubernetes-worker:$i; done
 ```
