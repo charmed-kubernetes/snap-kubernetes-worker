@@ -7,8 +7,11 @@ declare -r CACERT="$(snapctl get cacert)"
 
 if ! test -z "$KUBECONFIG" && ! test -z "$CACERT";
 then
+    mkdir -p ${SNAP_COMMON}/certs
+
     echo "$KUBECONFIG" > ${SNAP_COMMON}/kubeconfig
     echo "$CACERT" > ${SNAP_COMMON}/certs/ca.crt
+
     snapctl restart ${SNAP_NAME}.kubelet
     snapctl set-health okay
 fi
