@@ -236,7 +236,7 @@ parts:
       (
         cd $GOPATH/src/k8s.io/kubernetes
         git checkout ${KUBERNETES_COMMIT}
-        make
+        make all WHAT="cmd/kubelet cmd/kubectl cmd/kube-proxy"
       )
       cp $GOPATH/src/k8s.io/kubernetes/_output/local/go/bin/* $SNAPCRAFT_PART_INSTALL/bin/
   cni-plugins:
