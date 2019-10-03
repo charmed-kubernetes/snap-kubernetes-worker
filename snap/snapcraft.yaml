@@ -221,6 +221,7 @@ parts:
       - git
       - gcc
       - make
+      - rsync
       - pkg-config
     stage-packages:
       - conntrack
