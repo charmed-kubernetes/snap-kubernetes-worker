@@ -5,3 +5,4 @@
 --cni-bin-dir=${SNAP}/bin/cni/
 --container-runtime=remote
 --container-runtime-endpoint=unix:///${SNAP_COMMON}/run/containerd.sock
+--cloud-provider aws

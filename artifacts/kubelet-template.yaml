@@ -6,6 +6,25 @@ rootDir: ${SNAP_COMMON}/kubelet/
 certDir: ${SNAP_COMMON}/certs/
 containerRuntime: remote
 containerRuntimeEndpoint: ${SNAP_COMMON}/run/containerd.sock
+address: 0.0.0.0
+apiVersion: kubelet.config.k8s.io/v1beta1
 authentication:
+  anonymous:
+    enabled: false
+  webhook:
+    cacheTTL: 2m0s
+    enabled: true
   x509:
     clientCAFile: ${SNAP_COMMON}/certs/ca.crt
+authorization:
+  mode: Webhook
+  webhook:
+    cacheAuthorizedTTL: 5m0s
+    cacheUnauthorizedTTL: 30s
+cgroupDriver: cgroupfs
+clusterDNS:
+- 10.100.0.10
+clusterDomain: cluster.local
+featureGates:
+  RotateKubeletServerCertificate: true
+serverTLSBootstrap: true

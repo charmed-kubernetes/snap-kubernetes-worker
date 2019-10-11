@@ -31,6 +31,8 @@ hooks:
       - k8s-kubelet
 
 layout:
+  /opt/cni/bin:
+    bind: $SNAP/bin/cni
   /sbin/ipset:
     bind: $SNAP/bin/ipset
   /usr/local/bin:
@@ -41,6 +43,8 @@ layout:
     bind: $SNAP_DATA/kubelet
   /var/lib/kube-proxy:
     bind: $SNAP_DATA/kube-proxy
+  /var/lib/kube-proxy-config:
+    bind: $SNAP_DATA/kube-proxy-config
   /etc/cni/net.d:
     bind: $SNAP_DATA/cni/net.d
   /var/log:
@@ -265,9 +269,19 @@ parts:
         ./build_linux.sh
       )
       cp $GOPATH/src/github.com/containernetworking/plugins/bin/* $SNAPCRAFT_PART_INSTALL/bin/cni/
-  aws-iam-authenticator:
+  aws-cli:
     after:
       - cni-plugins
+    plugin: python
+    python-version: python3
+    python-packages:
+      - awscli
+    build-packages:
+      - python-pip
+      - libcurl4-openssl-dev
+  aws-iam-authenticator:
+    after:
+      - aws-cli
     plugin: nil
     build-packages:
       - curl
@@ -282,4 +296,3 @@ parts:
         https://amazon-eks.s3-us-west-2.amazonaws.com/1.14.6/2019-08-22/bin/linux/amd64/aws-iam-authenticator
       chmod +x aws-iam-authenticator
       cp aws-iam-authenticator $SNAPCRAFT_PART_INSTALL/bin/
-
