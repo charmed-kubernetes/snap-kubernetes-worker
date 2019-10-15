@@ -57,6 +57,7 @@ apps:
     plugs:
       - docker-privileged
       - docker-support
+      - kubernetes-support
       - firewall-control
       - kernel-module-control
       - network-bind
