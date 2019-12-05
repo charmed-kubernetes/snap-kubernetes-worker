@@ -4,5 +4,5 @@
 --cert-dir=${SNAP_COMMON}/certs/
 --cni-bin-dir=${SNAP}/bin/cni/
 --container-runtime=remote
---container-runtime-endpoint=unix:///${SNAP_COMMON}/run/containerd.sock
+--container-runtime-endpoint=unix:///${SNAP_COMMON}/containerd/run/containerd.sock
 --cloud-provider aws

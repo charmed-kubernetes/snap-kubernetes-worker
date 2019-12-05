@@ -1,1 +1,1 @@
---address=${SNAP_COMMON}/run/containerd.sock
+--address=${SNAP_COMMON}/containerd/run/containerd.sock

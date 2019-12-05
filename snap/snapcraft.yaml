@@ -31,6 +31,12 @@ hooks:
       - k8s-kubelet
 
 layout:
+  /host/opt/cni:
+    bind: $SNAP_DATA/cni
+  /opt/containerd:
+    bind: $SNAP_COMMON/containerd/opt
+  /var/lib/containerd:
+    bind: $SNAP_COMMON/containerd/var/lib
   /opt/cni/bin:
     bind: $SNAP/bin/cni
   /sbin/ipset:
