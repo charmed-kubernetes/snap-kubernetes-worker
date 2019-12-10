@@ -1,4 +1,4 @@
 #!/bin/bash
 set -eux
 
-cp $SNAP/* $SNAP_DATA/cni/bin/
+cp $SNAP/bin/cni/* $SNAP_DATA/cni/bin/
