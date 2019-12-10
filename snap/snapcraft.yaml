@@ -1,6 +1,6 @@
 name: kubernetes-worker
 base: core18
-version: '0.0.1'
+version: "0.0.1"
 summary: A complete Kubernetes worker
 description: |
   A fully functional Kubernetes worker in a snap.  This includes kubelet,
@@ -110,6 +110,11 @@ parts:
       - wrappers
     source: build/
     plugin: dump
+  patches:
+    plugin: dump
+    source: patches/
+    # don't stage any of the patches into the snap
+    prime: ["-*"]
   wrappers:
     source: wrappers/
     plugin: dump
@@ -124,6 +129,7 @@ parts:
   runc:
     after:
       - setup
+      - patches
     plugin: nil
     build-snaps:
       - go/1.12/stable
@@ -145,6 +151,14 @@ parts:
       (
         cd $GOPATH/src/github.com/opencontainers/runc
         git checkout ${RUNC_COMMIT}
+        git reset --hard HEAD
+        # patch runc to never do prctl to drop new privs label for all containers
+        for patch in "$SNAPCRAFT_STAGE"/runc-patches/*.patch; do
+          echo "Applying $(basename "$patch") ..."
+          git apply --ignore-space-change --ignore-whitespace "$patch"
+          echo
+        done
+
         make BUILDTAGS='seccomp apparmor'
       )
       cp $GOPATH/src/github.com/opencontainers/runc/runc $SNAPCRAFT_PART_INSTALL/bin/

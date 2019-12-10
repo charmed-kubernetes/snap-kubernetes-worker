@@ -1,0 +1,17 @@
+diff --git a/libcontainer/setns_init_linux.go b/libcontainer/setns_init_linux.go
+index 888981f5..50d6b93c 100644
+--- a/libcontainer/setns_init_linux.go
++++ b/libcontainer/setns_init_linux.go
+@@ -58,9 +58,9 @@ func (l *linuxSetnsInit) Init() error {
+ 		}
+ 	}
+ 	if l.config.NoNewPrivileges {
+-		if err := unix.Prctl(unix.PR_SET_NO_NEW_PRIVS, 1, 0, 0, 0); err != nil {
+-			return err
+-		}
++		// if err := unix.Prctl(unix.PR_SET_NO_NEW_PRIVS, 1, 0, 0, 0); err != nil {
++		// 	return err
++		// }
+ 	}
+ 	if err := label.SetProcessLabel(l.config.ProcessLabel); err != nil {
+ 		return err
