@@ -29,16 +29,15 @@ hooks:
     plugs:
       - network-control
       - k8s-kubelet
+      - kernel-module-control
 
 layout:
-  /host/opt/cni:
-    bind: $SNAP_DATA/cni
   /opt/containerd:
     bind: $SNAP_COMMON/containerd/opt
   /var/lib/containerd:
     bind: $SNAP_COMMON/containerd/var/lib
   /opt/cni/bin:
-    bind: $SNAP/bin/cni
+    bind: $SNAP_DATA/cni/bin
   /sbin/ipset:
     bind: $SNAP/bin/ipset
   /usr/local/bin:

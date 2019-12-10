@@ -36,6 +36,7 @@ oom_score = 0
     [plugins.cri.containerd]
       snapshotter = "overlayfs"
       no_pivot = false
+      no_new_privileges = false
       [plugins.cri.containerd.default_runtime]
         runtime_type = "io.containerd.runtime.v1.linux"
         runtime_engine = ""
@@ -45,7 +46,7 @@ oom_score = 0
         runtime_engine = ""
         runtime_root = ""
     [plugins.cri.cni]
-      bin_dir = "${SNAP}/bin/cni"
+      bin_dir = "${SNAP_DATA}/cni/bin"
       conf_dir = "${SNAP_DATA}/cni/net.d"
       conf_template = ""
     [plugins.cri.registry]
