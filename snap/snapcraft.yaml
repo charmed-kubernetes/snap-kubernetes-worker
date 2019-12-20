@@ -73,6 +73,9 @@ apps:
     command: kubelet.wrapper
     daemon: simple
     plugs:
+      - docker-privileged
+      - docker-support
+      - kubernetes-support
       - dot-kube
       - firewall-control
       - hardware-observe
@@ -168,6 +171,7 @@ parts:
       go/src/github.com/opencontainers/runc/runc: bin/runc
       containerd/install/bin/*: bin/
     stage-packages:
+      - systemd
       - libnss-myhostname
       - libnss-resolve
       - libnss-mymachines
@@ -218,6 +222,7 @@ parts:
       go/src/github.com/containerd/containerd/bin/*: bin/
       containerd/install/bin/*: bin/
     stage-packages:
+      - systemd
       - libnss-myhostname
       - libnss-resolve
       - libnss-mymachines
