@@ -6,7 +6,6 @@ rootDir: ${SNAP_COMMON}/kubelet/
 certDir: ${SNAP_COMMON}/certs/
 containerRuntime: remote
 containerRuntimeEndpoint: ${SNAP_COMMON}/containerd/run/containerd.sock
-apiVersion: kubelet.config.k8s.io/v1beta1
 authentication:
   anonymous:
     enabled: false
