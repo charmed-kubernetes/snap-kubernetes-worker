@@ -1,6 +1,6 @@
 name: kubernetes-worker
 base: core18
-version: '0.0.1'
+version: "0.0.1"
 summary: A complete Kubernetes worker
 description: |
   A fully functional Kubernetes worker in a snap.  This includes kubelet,
@@ -29,8 +29,15 @@ hooks:
     plugs:
       - network-control
       - k8s-kubelet
+      - kernel-module-control
 
 layout:
+  /opt/containerd:
+    bind: $SNAP_COMMON/containerd/opt
+  /var/lib/containerd:
+    bind: $SNAP_COMMON/containerd/var/lib
+  /opt/cni/bin:
+    bind: $SNAP_DATA/cni/bin
   /sbin/ipset:
     bind: $SNAP/bin/ipset
   /usr/local/bin:
@@ -41,6 +48,8 @@ layout:
     bind: $SNAP_DATA/kubelet
   /var/lib/kube-proxy:
     bind: $SNAP_DATA/kube-proxy
+  /var/lib/kube-proxy-config:
+    bind: $SNAP_DATA/kube-proxy-config
   /etc/cni/net.d:
     bind: $SNAP_DATA/cni/net.d
   /var/log:
@@ -59,10 +68,14 @@ apps:
       - network-bind
       - network-control
       - mount-observe
+      - network-setup-control
   kubelet:
     command: kubelet.wrapper
     daemon: simple
     plugs:
+      - docker-privileged
+      - docker-support
+      - kubernetes-support
       - dot-kube
       - firewall-control
       - hardware-observe
@@ -72,6 +85,7 @@ apps:
       - network-control
       - process-control
       - system-observe
+      - network-setup-control
   ctr:
     command: ctr.wrapper
     plugs:
@@ -101,6 +115,11 @@ parts:
       - wrappers
     source: build/
     plugin: dump
+  patches:
+    plugin: dump
+    source: patches/
+    # don't stage any of the patches into the snap
+    prime: ["-*"]
   wrappers:
     source: wrappers/
     plugin: dump
@@ -115,6 +134,7 @@ parts:
   runc:
     after:
       - setup
+      - patches
     plugin: nil
     build-snaps:
       - go/1.12/stable
@@ -136,6 +156,14 @@ parts:
       (
         cd $GOPATH/src/github.com/opencontainers/runc
         git checkout ${RUNC_COMMIT}
+        git reset --hard HEAD
+        # patch runc to never do prctl to drop new privs label for all containers
+        for patch in "$SNAPCRAFT_STAGE"/runc-patches/*.patch; do
+          echo "Applying $(basename "$patch") ..."
+          git apply --ignore-space-change --ignore-whitespace "$patch"
+          echo
+        done
+
         make BUILDTAGS='seccomp apparmor'
       )
       cp $GOPATH/src/github.com/opencontainers/runc/runc $SNAPCRAFT_PART_INSTALL/bin/
@@ -143,6 +171,7 @@ parts:
       go/src/github.com/opencontainers/runc/runc: bin/runc
       containerd/install/bin/*: bin/
     stage-packages:
+      - systemd
       - libnss-myhostname
       - libnss-resolve
       - libnss-mymachines
@@ -193,6 +222,7 @@ parts:
       go/src/github.com/containerd/containerd/bin/*: bin/
       containerd/install/bin/*: bin/
     stage-packages:
+      - systemd
       - libnss-myhostname
       - libnss-resolve
       - libnss-mymachines

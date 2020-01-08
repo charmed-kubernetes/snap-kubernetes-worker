@@ -1,0 +1,6 @@
+#!/bin/bash
+set -eux
+
+echo -e "nameserver 1.1.1.1\noptions edns0\nsearch ec2.internal" > $SNAP_COMMON/resolv.conf
+
+cp $SNAP/bin/cni/* $SNAP_DATA/cni/bin/

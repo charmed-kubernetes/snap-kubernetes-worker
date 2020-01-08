@@ -1,7 +1,9 @@
+root = "${SNAP_COMMON}/containerd/var/lib"
+state = "${SNAP_COMMON}/containerd/run"
 oom_score = 0
 
 [grpc]
-  address = "${SNAP_COMMON}/run/containerd.sock"
+  address = "${SNAP_COMMON}/containerd/run/containerd.sock"
   uid = 0
   gid = 0
   max_recv_message_size = 16777216
@@ -34,6 +36,7 @@ oom_score = 0
     [plugins.cri.containerd]
       snapshotter = "overlayfs"
       no_pivot = false
+      no_new_privileges = false
       [plugins.cri.containerd.default_runtime]
         runtime_type = "io.containerd.runtime.v1.linux"
         runtime_engine = ""
@@ -43,7 +46,7 @@ oom_score = 0
         runtime_engine = ""
         runtime_root = ""
     [plugins.cri.cni]
-      bin_dir = "${SNAP}/bin/cni"
+      bin_dir = "${SNAP_DATA}/cni/bin"
       conf_dir = "${SNAP_DATA}/cni/net.d"
       conf_template = ""
     [plugins.cri.registry]

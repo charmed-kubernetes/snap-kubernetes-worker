@@ -4,3 +4,5 @@
 parts/
 prime/
 stage/
+
+squashfs-root/

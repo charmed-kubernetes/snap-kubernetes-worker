@@ -2,6 +2,6 @@
 --kubeconfig=${SNAP_COMMON}/kubeconfig
 --root-dir=${SNAP_COMMON}/kubelet/
 --cert-dir=${SNAP_COMMON}/certs/
---cni-bin-dir=${SNAP}/bin/cni/
+--cni-bin-dir=${SNAP_DATA}/cni/bin/
 --container-runtime=remote
---container-runtime-endpoint=unix:///${SNAP_COMMON}/run/containerd.sock
+--container-runtime-endpoint=unix:///${SNAP_COMMON}/containerd/run/containerd.sock
