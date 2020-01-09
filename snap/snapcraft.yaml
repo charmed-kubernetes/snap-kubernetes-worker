@@ -45,7 +45,7 @@ layout:
   /var/lib/cni:
     bind: $SNAP_DATA/cni
   /var/lib/kubelet:
-    bind: $SNAP_DATA/kubelet
+    bind: $SNAP_COMMON/kubelet
   /var/lib/kube-proxy:
     bind: $SNAP_DATA/kube-proxy
   /var/lib/kube-proxy-config:
