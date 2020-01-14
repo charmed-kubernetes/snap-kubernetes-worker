@@ -4,6 +4,7 @@ failSwapOn: false
 networkPlugin: cni
 rootDir: ${SNAP_COMMON}/kubelet/
 certDir: ${SNAP_COMMON}/certs/
+cniBinDir: ${SNAP_DATA}/cni/bin/
 containerRuntime: remote
 containerRuntimeEndpoint: ${SNAP_COMMON}/containerd/run/containerd.sock
 authentication:
@@ -24,3 +25,4 @@ featureGates:
   RotateKubeletServerCertificate: true
 serverTLSBootstrap: true
 resolvConf: /run/systemd/resolve/resolv.conf
+cloudProvider: aws
