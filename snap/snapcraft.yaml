@@ -137,7 +137,7 @@ parts:
       - patches
     plugin: nil
     build-snaps:
-      - go/1.12/stable
+      - go/1.13/stable
     build-packages:
       - git
       - gcc
@@ -195,7 +195,7 @@ parts:
       - runc
     plugin: nil
     build-snaps:
-      - go/1.12/stable
+      - go/1.13/stable
     build-packages:
       - git
       - gcc
@@ -247,7 +247,7 @@ parts:
       - containerd
     plugin: nil
     build-snaps:
-      - go/1.12/stable
+      - go/1.13/stable
     build-packages:
       - git
       - gcc
@@ -276,7 +276,7 @@ parts:
       - kubernetes
     plugin: nil
     build-snaps:
-      - go/1.12/stable
+      - go/1.13/stable
     build-packages:
       - git
       - gcc
