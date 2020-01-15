@@ -25,4 +25,3 @@ featureGates:
   RotateKubeletServerCertificate: true
 serverTLSBootstrap: true
 resolvConf: /run/systemd/resolve/resolv.conf
-cloudProvider: aws

@@ -2,4 +2,3 @@
 --kubeconfig=${SNAP_COMMON}/kubeconfig
 --container-runtime=remote
 --container-runtime-endpoint=unix:///${SNAP_COMMON}/containerd/run/containerd.sock
---cloud-provider aws
