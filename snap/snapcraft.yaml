@@ -296,3 +296,30 @@ parts:
         ./build_linux.sh
       )
       cp $GOPATH/src/github.com/containernetworking/plugins/bin/* $SNAPCRAFT_PART_INSTALL/bin/cni/
+  aws-cli:
+    after:
+      - cni-plugins
+    plugin: python
+    python-version: python3
+    python-packages:
+      - awscli
+    build-packages:
+      - python-pip
+      - libcurl4-openssl-dev
+  aws-iam-authenticator:
+    after:
+      - aws-cli
+    plugin: nil
+    build-packages:
+      - curl
+    override-build: |
+      set -eu
+      . ../../../parts/setup/build/common.sh
+      . ../../../parts/setup/build/lock.sh
+
+      mkdir -p $SNAPCRAFT_PART_INSTALL/bin
+
+      curl -o aws-iam-authenticator \
+        https://amazon-eks.s3-us-west-2.amazonaws.com/1.14.6/2019-08-22/bin/linux/amd64/aws-iam-authenticator
+      chmod +x aws-iam-authenticator
+      cp aws-iam-authenticator $SNAPCRAFT_PART_INSTALL/bin/
