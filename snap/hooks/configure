@@ -3,8 +3,27 @@ set -eux
 
 declare -r KUBECONFIG="$(snapctl get kubeconfig)"
 declare -r CACERT="$(snapctl get cacert)"
+declare -r CLOUD_PROVIDER="$(snapctl get cloud-provider)"
 
+#  Optional arguments.
+KUBELET_ARGS="${SNAP_COMMON}/kubelet-args"
+KUBELET_CONFIG="${SNAP_COMMON}/kubelet.yaml"
 
+## Remove existing cloud providers.
+sed -i '/^--cloud-provider/ d' $KUBELET_ARGS
+sed -i '/^cloudProvider/ d' $KUBELET_CONFIG
+
+## Add the cloud provider.
+if ! test -z "$CLOUD_PROVIDER";
+then
+    echo -e "\n--cloud-provider=$CLOUD_PROVIDER" >> $KUBELET_ARGS
+    sed -i '/^$/d' $KUBELET_ARGS
+    echo -e "\ncloudProvider: $CLOUD_PROVIDER" >> $KUBELET_CONFIG
+    sed -i '/^$/d' $KUBELET_CONFIG
+fi
+
+# Required arguments.
+## All arguments are satisfied.
 if ! test -z "$KUBECONFIG" && ! test -z "$CACERT";
 then
     mkdir -p ${SNAP_COMMON}/certs
@@ -12,22 +31,25 @@ then
     echo "$KUBECONFIG" > ${SNAP_COMMON}/kubeconfig
     echo "$CACERT" > ${SNAP_COMMON}/certs/ca.crt
 
-    snapctl restart ${SNAP_NAME}.kubelet
+    snapctl restart ${SNAP_NAME}
     snapctl set-health okay
 fi
 
+## Neither arguments are satisfied.
 if test -z "$KUBECONFIG" && test -z "$CACERT";
 then
     snapctl stop ${SNAP_NAME}.kubelet
     snapctl set-health blocked "kubeconfig and cacert are needed before the kubelet can start"
 fi
 
+## Kubeconfig is missing.
 if test -z "$KUBECONFIG" && ! test -z "$CACERT";
 then
     snapctl stop ${SNAP_NAME}.kubelet
     snapctl set-health blocked "kubeconfig is needed before the kubelet can start."
 fi
 
+## Cacert is missing.
 if test -z "$CACERT" && ! test -z "$KUBECONFIG";
 then
     snapctl stop ${SNAP_NAME}.kubelet

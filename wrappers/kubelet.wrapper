@@ -6,7 +6,14 @@ export PATH="${SNAP}/usr/sbin:${SNAP}/usr/bin:${SNAP}/sbin:${SNAP}/bin:${PATH}"
 export LD_LIBRARY_PATH="${LD_LIBRARY_PATH}:${SNAP}/lib:${SNAP}/usr/lib:${SNAP}/lib/x86_64-linux-gnu:${SNAP}/usr/lib/x86_64-linux-gnu"
 export LD_LIBRARY_PATH=${SNAP_LIBRARY_PATH}:${LD_LIBRARY_PATH}
 
-sed 's@${SNAP}@'"${SNAP}"'@g;s@${SNAP_COMMON}@'"${SNAP_COMMON}"'@g' ${SNAP}/kubelet-template.yaml > ${SNAP_COMMON}/kubelet.yaml
+if ! test -f ${SNAP_COMMON}/kubelet.yaml;
+then
+    sed 's@${SNAP}@'"${SNAP}"'@g;s@${SNAP_COMMON}@'"${SNAP_COMMON}"'@g' ${SNAP}/kubelet-template.yaml > ${SNAP_COMMON}/kubelet.yaml
+fi
+if ! test -f ${SNAP_COMMON}/kubelet-args;
+then
+    sed 's@${SNAP}@'"${SNAP}"'@g;s@${SNAP_COMMON}@'"${SNAP_COMMON}"'@g' ${SNAP}/args/${APP} > ${SNAP_COMMON}/kubelet-args
+fi
 
-declare -a ARGS="($(cat ${SNAP}/args/${APP}))"
+declare -a ARGS="($(cat ${SNAP_COMMON}/kubelet-args))"
 exec "${SNAP}/bin/${APP}" "${ARGS[@]}"
