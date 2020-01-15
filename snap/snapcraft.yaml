@@ -75,7 +75,6 @@ apps:
     plugs:
       - docker-privileged
       - docker-support
-      - kubernetes-support
       - dot-kube
       - firewall-control
       - hardware-observe
