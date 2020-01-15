@@ -89,3 +89,11 @@ Connect all the interfaces.
 ```bash
 for i in docker-privileged k8s-kubelet dot-kube docker-support firewall-control hardware-observe kernel-module-control mount-observe network-control process-control system-observe; do snap connect kubernetes-worker:$i; done
 ```
+
+## Cloud Providers
+
+We are adding support for different cloud providers.  Supported providers are listed below.
+
+### EKS
+
+For instructions on deploying to EKS, see the [Using with EKS wiki page](https://github.com/charmed-kubernetes/snap-kubernetes-worker/wiki/Using-with-EKS).
