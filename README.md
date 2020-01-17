@@ -10,7 +10,19 @@ Install via `snap`.
 sudo snap install kubernetes-worker
 ```
 
-Then connect all the interfaces.
+This will install the latest version of Kubernetes.  If you would like to use an older version, you can see the available options.
+
+```bash
+snap info kubernetes-worker
+```
+
+An example of installing an older version.
+
+```bash
+sudo snap install kubernetes-worker --channel 1.14/stable
+```
+
+After installation, we will need to connect the remaining interfaces.
 
 ```bash
 sudo snap connect kubernetes-worker:kernel-module-control
