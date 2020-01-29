@@ -77,6 +77,7 @@ apps:
       - network-control
       - mount-observe
       - network-setup-control
+      - opengl
   kubelet:
     command: kubelet.wrapper
     daemon: simple
@@ -93,6 +94,7 @@ apps:
       - process-control
       - system-observe
       - network-setup-control
+      - opengl
   ctr:
     command: ctr.wrapper
     plugs:
