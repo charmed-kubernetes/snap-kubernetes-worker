@@ -99,7 +99,7 @@ sudo snap install ./kubernetes-worker_*.snap --dangerous
 Connect all the interfaces.
 
 ```bash
-for i in docker-privileged k8s-kubelet dot-kube docker-support firewall-control hardware-observe kernel-module-control mount-observe network-control process-control system-observe; do sudo snap connect kubernetes-worker:$i; done
+for i in docker-privileged k8s-kubelet dot-kube docker-support firewall-control hardware-observe kernel-module-control mount-observe network-control process-control system-observe opengl; do sudo snap connect kubernetes-worker:$i; done
 ```
 
 ## Cloud Providers
