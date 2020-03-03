@@ -12,5 +12,7 @@ jobs:
       uses: actions/checkout@v2
     - name: Install snapcraft
       uses: samuelmeuli/action-snapcraft@v1.1.0
+      with:
+        use_lxd: true 
     - name: Build snap
       run: snapcraft build
