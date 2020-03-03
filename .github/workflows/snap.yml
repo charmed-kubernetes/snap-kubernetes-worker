@@ -10,9 +10,13 @@ jobs:
     steps:
     - name: Checking out repo
       uses: actions/checkout@v2
+    - name: Install LXD
+      run: |
+        - sudo snap install lxd
+        - sudo /snap/bin/lxd.migrate -yes
+        - sudo /snap/bin/lxd waitready
+        - sudo /snap/bin/lxd init --auto
     - name: Install snapcraft
-      uses: samuelmeuli/action-snapcraft@v1.1.0
-      with:
-        use_lxd: true 
+      run: sudo snap install snapcraft --classic
     - name: Build snap
       run: snapcraft build --use-lxd
