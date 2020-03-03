@@ -1,0 +1,12 @@
+name: CI
+
+on: [push]
+
+jobs:
+  build:
+    name: Create Snap Package
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Install snapcraft
+      run: sudo snap install snapcraft --classic
