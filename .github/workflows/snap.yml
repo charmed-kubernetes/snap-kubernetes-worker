@@ -8,5 +8,10 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - name: Install snapcraft
-      run: sudo snap install snapcraft --classic
+    - name: Install Snapcraft
+      uses: samuelmeuli/action-snapcraft@v1
+      with:
+        use_lxd: true
+    - name: Build Snap
+      run: snapcraft build --use-lxd
+      
