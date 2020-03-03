@@ -9,9 +9,6 @@ jobs:
 
     steps:
     - name: Install Snapcraft
-      uses: samuelmeuli/action-snapcraft@v1
-      with:
-        use_lxd: true
+      run: sudo snap install snapcraft --classic
     - name: Build Snap
-      run: snapcraft build --use-lxd
-      
+      run: snapcraft build
