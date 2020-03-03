@@ -15,4 +15,4 @@ jobs:
       with:
         use_lxd: true 
     - name: Build snap
-      run: snapcraft build
+      run: snapcraft build --use-lxd
