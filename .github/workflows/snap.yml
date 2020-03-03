@@ -8,6 +8,8 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+    - name: Checking out repo
+      uses: actions/checkout@v2
     - name: Install Snapcraft
       run: sudo snap install snapcraft --classic
     - name: Build Snap
