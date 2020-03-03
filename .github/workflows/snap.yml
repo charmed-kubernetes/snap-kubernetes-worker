@@ -12,10 +12,10 @@ jobs:
       uses: actions/checkout@v2
     - name: Install LXD
       run: |
-        - sudo snap install lxd
-        - sudo /snap/bin/lxd.migrate -yes
-        - sudo /snap/bin/lxd waitready
-        - sudo /snap/bin/lxd init --auto
+        sudo snap install lxd
+        sudo /snap/bin/lxd.migrate -yes
+        sudo /snap/bin/lxd waitready
+        sudo /snap/bin/lxd init --auto
     - name: Install snapcraft
       run: sudo snap install snapcraft --classic
     - name: Build snap
