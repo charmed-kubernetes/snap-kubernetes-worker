@@ -22,3 +22,10 @@ jobs:
       run: sudo snap install snapcraft --classic
     - name: Build snap
       run: sudo snapcraft build --use-lxd
+    - name: Make built snap name generic
+      run: sudo mv kubernetes-worker*.snap kubernetes-worker.snap
+    - name: Uploading artifact
+      uses: actions/upload-artifact@v1
+      with:
+        name: kubernetes-worker.snap
+        path: kubernetes-worker.snap
