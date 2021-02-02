@@ -10,7 +10,7 @@ Install via `snap`.
 sudo snap install kubernetes-worker
 ```
 
-This will install the latest version of Kubernetes.  If you would like to use an older version, you can see the available options.
+This will install the latest version of Kubernetes. If you would like to use an older version, you can see the available options.
 
 ```bash
 snap info kubernetes-worker
@@ -32,7 +32,7 @@ sudo snap connect kubernetes-worker:kernel-module-control
 
 ### kubeconfig
 
-We must feed in a `kubeconfig` file to allow the worker to enrol with the 
+We must feed in a `kubeconfig` file to allow the worker to enrol with the
 cluster.
 
 Example:
@@ -55,7 +55,7 @@ sudo snap set kubernetes-worker cacert="$(cat ~/ca.crt)"
 
 ## ctr
 
-Access the underlying containerd CLI.  Must be used with `sudo`.
+Access the underlying containerd CLI. Must be used with `sudo`.
 
 Example:
 
@@ -76,8 +76,8 @@ kubernetes-worker.kubectl get all --all-namespaces
 ## Developer Notes
 
 When building with `snapcraft`, due to the snap using `core18`, the build will
-take place within a `multipass` container.  We need to up the default memory
-for this container, otherwise the build will fail.  We can do this with the
+take place within a `multipass` container. We need to up the default memory
+for this container, otherwise the build will fail. We can do this with the
 following command.
 
 ```bash
@@ -104,7 +104,7 @@ for i in docker-privileged k8s-kubelet dot-kube docker-support firewall-control 
 
 ## Cloud Providers
 
-We are adding support for different cloud providers.  Supported providers are listed below.
+We are adding support for different cloud providers. Supported providers are listed below.
 
 ### EKS
 
