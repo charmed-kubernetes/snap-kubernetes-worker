@@ -127,7 +127,7 @@ parts:
   patches:
     plugin: dump
     source: patches/
-    # don't stage any of the patches into the snap
+    # Don't stage any of the patches into the snap
     prime: ["-*"]
   wrappers:
     source: wrappers/

@@ -10,7 +10,7 @@ export LD_LIBRARY_PATH=${SNAP_LIBRARY_PATH}:${LD_LIBRARY_PATH}
 export XDG_RUNTIME_DIR="${SNAP_COMMON}/run"
 mkdir -p "${XDG_RUNTIME_DIR}"
 
-apparmor_parser -r $SNAP/containerd-profile
+exec apparmor_parser -r $SNAP/containerd-profile
 
 if [ -e "${SNAP_DATA}/var/lock/gpu" ]; then
   RUNTIME="nvidia-container-runtime"
