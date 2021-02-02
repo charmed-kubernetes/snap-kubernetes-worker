@@ -73,7 +73,7 @@ Example:
 kubernetes-worker.kubectl get all --all-namespaces
 ```
 
-## Developer notes
+## Developer Notes
 
 When building with `snapcraft`, due to the snap using `core18`, the build will
 take place within a `multipass` container.  We need to up the default memory
