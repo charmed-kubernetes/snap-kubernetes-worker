@@ -1,6 +1,6 @@
 name: kubernetes-worker
 base: core18
-version: "0.0.1"
+version: "0.0.2"
 summary: A complete Kubernetes worker
 description: |
   A fully functional Kubernetes worker in a snap.  This includes kubelet,
@@ -8,6 +8,7 @@ description: |
 
 grade: devel
 confinement: strict
+assumes: [snapd2.48.3]
 
 architectures:
   - build-on: amd64
@@ -66,7 +67,9 @@ layout:
 apps:
   containerd:
     command: containerd.wrapper
-    daemon: simple
+    daemon: notify
+    stop-mode: sigterm
+    restart-condition: always
     plugs:
       - docker-privileged
       - docker-support
@@ -127,7 +130,6 @@ parts:
   patches:
     plugin: dump
     source: patches/
-    # don't stage any of the patches into the snap
     prime: ["-*"]
   wrappers:
     source: wrappers/
