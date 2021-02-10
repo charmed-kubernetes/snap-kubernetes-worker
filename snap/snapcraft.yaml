@@ -8,7 +8,6 @@ description: |
 
 grade: devel
 confinement: strict
-assumes: [snapd2.48.3]
 
 architectures:
   - build-on: amd64
